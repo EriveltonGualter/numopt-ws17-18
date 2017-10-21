@@ -1,3 +1,8 @@
+% ex1_toy_example.m
+%
+%     Author: Fabian Meyer
+% Created on: 21 Oct 2017
+
 clc;
 clear all;
 close all;
@@ -17,7 +22,7 @@ options = sdpsettings('solver', 'quadprog','verbose',2);
 % solve optimization problem
 diagn = optimize(C, f, options);
 
-% read variables as double 
+% read variables as double
 xopt = double(x);
 yopt = double(y);
 

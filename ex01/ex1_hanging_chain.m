@@ -1,3 +1,8 @@
+% ex1_hanging_chain.m
+%
+%     Author: Fabian Meyer
+% Created on: 21 Oct 2017
+
 clc;
 clear all;
 close all;
