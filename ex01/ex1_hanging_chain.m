@@ -12,17 +12,24 @@ m = 4/N;
 D = 70;
 g0 = 9.81;
 
-Vchain = 0;
 % define potential energy for springs
+Vspr = 0;
 for i = 1:N-1
-    Vchain = Vchain + 0.5 * D * ((y(i) - y(i+1))^2 + (z(i) - z(i+1))^2);
+    Vspr = Vspr + ((y(i) - y(i+1))^2 + (z(i) - z(i+1))^2);
 end
-% define potential energy for masses
-for i = 1:N
-    Vchain = Vchain + g0 * m * z(i);
-end
+Vspr = 0.5 * D * Vspr;
 
-% TODO: complete the (equality) constraints HERE
+% define potential energy for masses
+Vmass = 0;
+for i = 1:N
+    Vmass = Vmass + z(i);
+end
+Vmass = g0 * m * Vmass;
+
+% potential energy of whole chain
+Vchain = Vspr + Vmass;
+
+% constraints
 constr = [
     [y(1) z(1)] == [-2 1];
     [y(N) z(N)] == [ 2 1]
