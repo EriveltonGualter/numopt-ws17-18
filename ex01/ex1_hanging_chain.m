@@ -2,9 +2,10 @@ clc;
 clear all;
 close all;
 
+GROUND = 1;
 N = 40;
 
-% TODO: complete the definition of variables HERE
+% variable definitions
 y = sdpvar(N,1);
 z = sdpvar(N,1);
 
@@ -32,8 +33,14 @@ Vchain = Vspr + Vmass;
 % constraints
 constr = [
     [y(1) z(1)] == [-2 1];
-    [y(N) z(N)] == [ 2 1]
+    [y(N) z(N)] == [ 2 1];
 ];
+
+if GROUND
+    for i = 1:N
+        constr = [constr; z(i) >= 0.5; z(i) - 0.1 * y(i) >= 0.5];
+    end
+end
 
 % Set options and solve the problem with quadprog:
 options = sdpsettings('solver', 'quadprog','verbose',2);
