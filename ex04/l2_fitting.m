@@ -15,5 +15,15 @@ x = linspace(INT(1), INT(2), N)';
 % calculate y components with gaussian noise
 y = 3 * x + 4 * ones(N,1) + randn(N,1);
 
+
+% calculate linear fitting by formula
+J = [ x';
+      ones(1,N)]';  
+ab = (J' * J)^(-1) * J' * y;
+yf = ab(1) * x + ones(N,1) * ab(2);
+  
 figure;
-plot(x,y,'bo');
+plot(x, y, 'bo');
+hold on;
+plot(x, yf, 'g-');
+hold off;
