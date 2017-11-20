@@ -6,7 +6,7 @@ function [xk] = newton_opt(x0, G, B)
 
 N = 4096;
 
-xk = zeros(2, N);
+xk = zeros(size(x0,2), N);
 xk(:,1) = x0;
 
 for i = 1:N-1
