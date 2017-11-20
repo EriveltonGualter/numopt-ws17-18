@@ -25,7 +25,7 @@ xk_f = newton_opt(x0, F, Gf);
 Fk_f = Fa(xk_f);
 
 % calc exact newton
-xk_ex = newton_opt(x0, G, H);
+xk_ex = newton_opt(x0, F, G);
 Fk_ex = Fa(xk_ex);
 
 figure();
