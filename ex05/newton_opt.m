@@ -4,8 +4,8 @@ function [xk] = newton_opt(x0, G, B)
 % B: approx. hessian of objective function, function of x, mxm
 % xk: iterates of optimization including x0
 
-N = 4096;
-
+% pre init result vector for fast computation
+N = 8192;
 xk = zeros(size(x0,1), N);
 xk(:,1) = x0;
 

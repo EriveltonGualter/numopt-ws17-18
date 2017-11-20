@@ -46,4 +46,6 @@ dk(1,:) = [1:length(dk)];
 dk(2,:) = sqrt(sum(diff.^2, 1));
 %dk(2,:) = arrayfun(@(i) norm(diff(:,i)), 1:length(dk));
 % plot difference of methods
-%plot(dk(1,:), dk(2,:));
+figure();
+title('Exact Newton vs Gauss Newton');
+plot(dk(1,:), dk(2,:));
