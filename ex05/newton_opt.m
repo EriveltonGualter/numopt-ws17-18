@@ -4,7 +4,7 @@ function [xk] = newton_opt(x0, G, B)
 % B: approx. hessian of objective function, function of x, mxm
 % xk: iterates of optimization including x0
 
-N = 1024;
+N = 4096;
 
 xk = zeros(2, N);
 xk(:,1) = x0;

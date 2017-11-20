@@ -7,7 +7,7 @@ clc;
 clear all;
 close all;
 
-alpha = 0;
+alpha = 500;
 x0 = [-1;-1];
 
 % function f
@@ -19,17 +19,23 @@ G = @(x) [x(1) - 1 - 200 * x(1) * (x(2) - x(1)^2);
 % exact Hessian of f(x)
 H = @(x) [ 1 - 200 * x(2) + 600 * x(1)^2, -200 * x(1);
           -200 * x(1),                     101];
-% gauss newton Hessian of f(x)
-Hgn = @(x) [ 1 + 400 * x(1)^2 + alpha, -200 * x(1);
-            -200 * x(1),                101 + alpha];
+% gauss newton Hessian
+Hgn = @(x) [ 1 + 400 * x(1)^2, -200 * x(1);
+            -200 * x(1),        101];
+% steepest descent Hessian
+Hsd = @(x) alpha * eye(2);
 
 % do exact newton method
 xk_ex = newton_opt(x0, G, H);
 % do gauss-newton method
-xk_gn = newton_opt(x0, G,Hgn);
+xk_gn = newton_opt(x0, G, Hgn);
+% do steepest descent method
+xk_sd = newton_opt(x0, G, Hsd);
 
 plot_results(xk_ex);
 plot_results(xk_gn);
+plot_results(xk_sd);
+length(xk_sd)
 
 % helpers to calc difference of methods
 l = min(length(xk_ex), length(xk_gn));
@@ -40,4 +46,4 @@ dk(1,:) = [1:length(dk)];
 dk(2,:) = sqrt(sum(diff.^2, 1));
 %dk(2,:) = arrayfun(@(i) norm(diff(:,i)), 1:length(dk));
 % plot difference of methods
-plot(dk(1,:), dk(2,:));
+%plot(dk(1,:), dk(2,:));

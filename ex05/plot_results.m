@@ -1,4 +1,4 @@
-function plot_results( zlog )
+function plot_results(zlog)
 
 if size(zlog,2) == 2
     zlog = zlog';
@@ -47,8 +47,6 @@ xlabel('x')
 ylabel('y')
 
 plot(zlog(1,:),zlog(2,:),'r--*')
-
-
 
 end
 
