@@ -7,8 +7,8 @@ clc;
 clear all;
 close all;
 
-N = 1024;
 alpha = 0;
+x0 = [-1;-1];
 
 % function f
 f = @(x) 0.5 * (x(1) - 1)^2 + 0.5 * (10 * (x(2) - x(1)^2))^2 + 0.5 * x(2)^2;
@@ -23,27 +23,21 @@ H = @(x) [ 1 - 200 * x(2) + 600 * x(1)^2, -200 * x(1);
 Hgn = @(x) [ 1 + 400 * x(1)^2 + alpha, -200 * x(1);
             -200 * x(1),                101 + alpha];
 
-xk = zeros(2, N);
-xk(:,1) = [-1;-1];
+% do exact newton method
+xk_ex = newton_opt(x0, G, H);
+% do gauss-newton method
+xk_gn = newton_opt(x0, G,Hgn);
 
-% define which hessian is to be used
-B = Hgn;
+plot_results(xk_ex);
+plot_results(xk_gn);
 
-for i = 1:N-1
-    % calc current gradient and hessian
-    Bk = B(xk(:,i));
-    Gk = G(xk(:,i));
-    
-    if norm(Gk) <= 1e-3
-        xk = xk(:,1:i);
-        length(xk)
-        break 
-    end
-    
-    % calc newton step
-    pk = -inv(Bk) * Gk;
-    % calc new iterate
-    xk(:, i+1) = xk(:,i) + pk;
-end
-
-plot_results(xk);
+% helpers to calc difference of methods
+l = min(length(xk_ex), length(xk_gn));
+diff = xk_ex(:,1:l) - xk_gn(:,1:l);
+% calc difference of methods
+dk = zeros(2, l);
+dk(1,:) = [1:length(dk)];
+dk(2,:) = sqrt(sum(diff.^2, 1));
+%dk(2,:) = arrayfun(@(i) norm(diff(:,i)), 1:length(dk));
+% plot difference of methods
+plot(dk(1,:), dk(2,:));
