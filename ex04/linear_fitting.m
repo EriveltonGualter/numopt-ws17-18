@@ -8,28 +8,31 @@ clear all;
 close all;
 
 N = 30;
-INT = [0;5];
-OUTL = 1;
+INTERVAL = [0;5];
+useOutliers = true;
 
 % create uniformly stepped measurement points
-x = linspace(INT(1), INT(2), N)';
+x = linspace(INTERVAL(1), INTERVAL(2), N)';
 % calculate y components with gaussian noise
 y = 3 * x + 4 * ones(N,1) + randn(N,1);
 
 % check if we want outliers
-if OUTL ~= 0
+if useOutliers
     % add 3 outliers to y
     idx = randi(N,1,3);
-    y(idx) = y(idx) + (rand(3,1) * 2 - 1) * 50;
+    y(idx) = y(idx) + -abs((rand(3,1) * 2 - 1)) * 50;
 end
 
 % ===================================
 % calculate linear fitting by formula
 % ===================================
 
+% according to p.43 example 6.2
 J = [ x';
-      ones(1,N)]';  
+      ones(1,N)]';
+% calculate vector of a and b (eq 3)
 ab = (J' * J)^(-1) * J' * y;
+% should be same as y
 yf = J * ab;
 
 % ===========================================
