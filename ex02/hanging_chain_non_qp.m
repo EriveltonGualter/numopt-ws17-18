@@ -9,7 +9,7 @@ close all;
 
 A = 0;
 B = 1;
-MODE = B;
+MODE = A;
 N = 40;
 
 Y2 = [-2:.1:2];
@@ -24,18 +24,10 @@ D = 70;
 g0 = 9.81;
 
 % define potential energy for springs
-Vspr = 0;
-for i = 1:N-1
-    Vspr = Vspr + ((y(i) - y(i+1))^2 + (z(i) - z(i+1))^2);
-end
-Vspr = 0.5 * D * Vspr;
+Vspr = 0.5 * D * sum((y(1:N-1) - y(2:N)).^2 + (z(1:N-1) - z(2:N)).^2);
 
 % define potential energy for masses
-Vmass = 0;
-for i = 1:N
-    Vmass = Vmass + z(i);
-end
-Vmass = g0 * m * Vmass;
+Vmass = g0 * m * sum(z);
 
 % potential energy of whole chain
 Vchain = Vspr + Vmass;
@@ -46,21 +38,15 @@ constr = [
     [y(N) z(N)] == [ 2 1];
 ];
 
-constra = [];
-for i = 1:N
-    constra = [constra; z(i) >= -0.2 + 0.1 * y(i)^2];
-end
+% define parabola constraints
+constra = z >= -0.2 + 0.1 * y.^2;
+% define flipped parabola constraints
+constrb = z >= - y.^2;
 
-constrb = [];
-for i = 1:N
-    constrb = [constrb; z(i) >= - y(i)^2];
-end
-
-
+% determine which case is investigated
 if MODE == A
     constr = [constr; constra];
     Z2 = -0.2 + 0.1 * Y2.^2;
-        
 elseif MODE == B
     constr = [constr; constrb];
     Z2 = - Y2.^2;
