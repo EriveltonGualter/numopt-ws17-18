@@ -7,7 +7,14 @@ clc;
 clear all;
 close all;
 
-MODE = 1;
+% init SDPT3
+olddir = cd('/opt/MATLAB/R2017b/toolbox/sdpt3/');
+startup
+cd(olddir)
+
+M02b = 0;
+M02C = 1;
+MODE = M02b;
 N = 6; % number of nodes
 M = 10; % number of edges
 Xmax = 200; % max cross-sectional area
@@ -25,17 +32,16 @@ x = sdpvar(M,1);
 % slack variable
 s = sdpvar(1,1);
 
+% calculate stiffness and its components
 [KLMI, K, Le] = calculate_stiffness(D);
 
-Kx = zeros(size(KLMI(:,:,1)));
-for i = 1:M
-    Kx = Kx + KLMI(:,:,i) * x(i);
-end
-
+% define matrix for contraint (schur complement)
 B = [s    Fext';
-     Fext Kx];
+     Fext K];
+% define volume of the construction
 V = sum(Le .* x);
- 
+
+% set constraints
 constr = [x >= 0;
           x <= Xmax;
           V <= Vmax;
@@ -45,4 +51,4 @@ constr = [x >= 0;
 options = sdpsettings('solver', 'SDPT3','verbose',2);
 diagn   = optimize(constr, s, options);
 
-plot_structure(D, double(Kx));
+plot_structure(D, double(K));
