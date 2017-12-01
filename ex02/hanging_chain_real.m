@@ -31,19 +31,19 @@ Vmass = g0 * m * sum(z);
 % potential energy of whole chain
 Vchain = Vspr + Vmass;
 
+% calc d
+d = sqrt((y(1:N-1) - y(2:N)).^2 + (z(1:N-1) - z(2:N)).^2) - repmat(Li, N-1 ,1);
+
 % constraints
+% max(x,d) is same as saying s >= 0 and s >= d
+% formulate objective fucntion using constraints
+% and slack variable
 constr = [
     [y(1) z(1)] == [-2 1];
     [y(N) z(N)] == [ 2 1];
+    s - d >= 0;
+    s >= 0
 ];
-
-for i = 1:N-1
-    d = sqrt((y(i) - y(i+1))^2 + (z(i) - z(i+1))^2) - Li;
-    % max(x,d) is same as saying s >= 0 and s >= d
-    % formulate objective fucntion using constraints
-    % and slack variable
-    constr = [constr; s(i) - d >= 0; s(i) >= 0];
-end
 
 % Set options and solve the problem with quadprog:
 options = sdpsettings('solver', 'fmincon','verbose',2);
