@@ -7,7 +7,7 @@ clc;
 clear all;
 close all;
 
-GROUND = 1;
+GROUND = true;
 N = 40;
 
 % variable definitions
@@ -19,18 +19,10 @@ D = 70;
 g0 = 9.81;
 
 % define potential energy for springs
-Vspr = 0;
-for i = 1:N-1
-    Vspr = Vspr + ((y(i) - y(i+1))^2 + (z(i) - z(i+1))^2);
-end
-Vspr = 0.5 * D * Vspr;
+Vspr = 0.5 * D * sum((y(1:N-1) - y(2:N)).^2 + (z(1:N-1) - z(2:N)).^2);
 
 % define potential energy for masses
-Vmass = 0;
-for i = 1:N
-    Vmass = Vmass + z(i);
-end
-Vmass = g0 * m * Vmass;
+Vmass = g0 * m * sum(z);
 
 % potential energy of whole chain
 Vchain = Vspr + Vmass;
@@ -42,9 +34,9 @@ constr = [
 ];
 
 if GROUND
-    for i = 1:N
-        constr = [constr; z(i) >= 0.5; z(i) - 0.1 * y(i) >= 0.5];
-    end
+    constr = [constr;
+              z >= 0.5;
+              z - 0.1 * y >= 0.5];
 end
 
 % Set options and solve the problem with quadprog:
