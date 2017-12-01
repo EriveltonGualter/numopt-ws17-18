@@ -12,9 +12,11 @@ x = sdpvar(1,1);
 y = sdpvar(1,1);
 
 % define objective
+%f = x^2 - 2*x;
 f = x^2 - 2*x + y^2 + y;
 
 % define constraints
+%C = [];
 C = [x >= 1.5; x + y >= 0];
 % define solver
 options = sdpsettings('solver', 'quadprog','verbose',2);
