@@ -39,9 +39,12 @@ length(xk_sd)
 
 % helpers to calc difference of methods
 l = min(length(xk_ex), length(xk_gn));
-diff = xk_ex(:,1:l) - xk_gn(:,1:l);
+u = max(length(xk_ex), length(xk_gn));
+% calc difference, repeat last val of gauss newton and compare to remaining
+% exact newton iterates
+diff = [xk_ex(:,1:l) - xk_gn(:,1:l), xk_ex(:,l+1:u) - repmat(xk_gn(:,l),1,u-l)]; 
 % calc difference of methods
-dk = zeros(2, l);
+dk = zeros(2, length(diff));
 dk(1,:) = [1:length(dk)];
 dk(2,:) = sqrt(sum(diff.^2, 1));
 %dk(2,:) = arrayfun(@(i) norm(diff(:,i)), 1:length(dk));
