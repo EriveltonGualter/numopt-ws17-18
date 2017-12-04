@@ -1,4 +1,4 @@
-% lifted_newton_method2.m
+% lifted_newton_method.m
 %
 %     Author: Fabian Meyer
 % Created on: 20 Nov 2017
@@ -16,10 +16,10 @@ F = @(x) [x(2) - x(1)^2;
           -2   - x(4)^2];
 
 % Jacobian
-G = @(x) [-2*x(1)   1       0       0;
-           0       -2*x(2)  1       0;
-           0        0      -2*x(3)  1;
-           0        0       0      -2*x(4)];
+G = @(x) [-2*x(1),   1,       0,       0;
+           0,       -2*x(2),  1,       0;
+           0,        0,      -2*x(3),  1;
+           0,        0,       0,      -2*x(4)];
 % transposed Jacobian  
 Gt = @(x) [-2*x(1)   0       0       0;
             1       -2*x(2)  0       0;
@@ -36,5 +36,5 @@ length(xk)
 
 figure();
 title('Ex 05 Nr3c');
-plot(1:length(xk), Fk, 'DisplayName', 'foo');
+plot(1:length(xk), Fk, 'DisplayName', 'Lifted Newton');
 legend('show');
