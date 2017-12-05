@@ -1,18 +1,14 @@
 
 % testing the different functions
-clear all; close all; clc
+clc;
+clear all;
+close all;
 
-% number of discretization steps
-param.N = 50;
-
-% init condition
-param.x0 = 0.6;
-
-% terminal time
-param.T  = 5;
-
-% terminal weight
-param.q  = 20;
+% set parameters
+param.N = 50; %number of discretization steps
+param.x0 = 0.6; % init condition
+param.T  = 5; % terminal time
+param.q  = 20; % terminal weight
 
 % interval length
 h = param.T/param.N;
@@ -22,13 +18,10 @@ Utst = rand(param.N,1);
 
 % finite differences on nonlinear part 
 [F1, J1] = finite_difference(@Phi, Utst, param);
-
 % imaginary trick 
 [F2, J2] = i_trick(@Phi, Utst, param);
-
 % forward AD
 [F3, J3] = Phi_FAD(Utst, param);
-
 % backward AD
 [F4, J4] = Phi_BAD(Utst, param);
 
@@ -44,5 +37,3 @@ disp(max(max(abs(J2-J3))))
 disp('Error between imaginary trick and backward AD:')
 disp(' ')
 disp(max(max(abs(J2-J4))))
-
-
