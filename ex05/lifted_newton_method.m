@@ -10,10 +10,11 @@ close all;
 x0 = 1 * [1 1 1 1]';
 
 % residual function
+% converges only for 2 not for -2
 F = @(x) [x(2) - x(1)^2;
           x(3) - x(2)^2;
           x(4) - x(3)^2;
-          -2   - x(4)^2];
+          2    - x(4)^2];
 
 % Jacobian
 G = @(x) [-2*x(1),   1,       0,       0;
