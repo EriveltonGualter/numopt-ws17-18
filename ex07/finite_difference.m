@@ -12,7 +12,7 @@ function [F, J] = finite_difference(f, x, param)
 
 t = sqrt(eps);
 F = f(x, param);
-J = zeros(length(x), 1);
+J = zeros(1, length(x));
 
 for i = 1:length(x)
    p = zeros(length(x), 1);
