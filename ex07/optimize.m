@@ -74,8 +74,8 @@ for k = 1:maxit
     
     % Update variables
     J = J_new;
-    U(:, k+1) = U_new;
-    F(:, k+1) = F_new;
+    Uk(:, k+1) = U_new;
+    Fk(:, k+1) = F_new;
 
     
     if norm(J) < tol
@@ -87,7 +87,10 @@ end
 
 disp('Done');
 
-t = linspace(1, length(Fk));
+t = 1:length(Fk);
 
 figure();
 plot(t, Fk);
+
+figure();
+plot(t, sum(Uk, 1));
