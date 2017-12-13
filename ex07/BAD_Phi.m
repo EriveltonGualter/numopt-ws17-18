@@ -17,7 +17,13 @@ x0 = param.x0;
 h  = param.T/N;
 q  = param.q;
 
-tape = [];
+tlen = N*3+1;
+% preallocate tape with structs
+tape = repmat(struct('tag', @(x) x,    ...
+                     'x', [0;0],       ...
+                     'jin', 0,         ...
+                     'outref', [0;0]), ...
+              1, tlen);
 
 % values of elementary functions
 Fel = zeros(N+1,1);
@@ -29,23 +35,19 @@ J = zeros(1, N);
 % evaluate function and record tape on the way
 for k = 1:N
       
-    kref = length(tape);
+    kref = (k-1)*3;
  
     % calculate xk = (1 + h) * xk - h * xk^2 + h * Uk
     % multiplication tmp1 = xk^2
-    [Fel(k+1), tape] = BAD_mul(1, [Fel(k);Fel(k)], tape, [kref;kref]);
+    [Fel(k+1), tape] = BAD_mul(1, [Fel(k);Fel(k)], tape, kref+1, [kref;kref]);
     % addition tmp2 = (1 + h) * xk - h * tmp1
-    [Fel(k+1), tape] = BAD_add([(1+h); -h], [Fel(k);Fel(k+1)], tape, [kref, kref+1]);
+    [Fel(k+1), tape] = BAD_add([(1+h); -h], [Fel(k);Fel(k+1)], tape, kref+2, [kref, kref+1]);
     % addition tmp3 = tmp2 + h * Uk
-    [Fel(k+1), tape] = BAD_add([1; h], [Fel(k+1);U(k)], tape, [kref+2, -k]);
+    [Fel(k+1), tape] = BAD_add([1; h], [Fel(k+1);U(k)], tape, kref+3, [kref+2, -k]);
 end
 
-tlen = length(tape);
 % multiplication q * xN^2
-[F, tape] = BAD_mul(q, [Fel(end); Fel(end)], tape, [tlen;tlen]);
-
-% abbrev length of tape
-tlen = length(tape);
+[F, tape] = BAD_mul(q, [Fel(end); Fel(end)], tape, tlen, [tlen-1;tlen-1]);
 
 % evaluate recorded tape
 for i = 1:M

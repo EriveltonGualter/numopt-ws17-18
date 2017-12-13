@@ -1,4 +1,4 @@
-function [F, tape] = BAD_add(c, x, tape, outref)
+function [F, tape] = BAD_add(c, x, tape, k, outref)
 % BAD_add.m
 %
 %     Author: Fabian Meyer
@@ -6,16 +6,17 @@ function [F, tape] = BAD_add(c, x, tape, outref)
 %
 % c: 2x1, constant factor for each term
 % x: 2x1, point of jacobian approx
+% tape: array of structs, tape for recording backwards AD
+% k: 1x1, index where this function resides in tape
+% outref: 2x1, references where outputs of this function should be written
 
 % evaluate function value
 F = c' * x;
 
-elem.tag = @(jin) c * jin; % adjoint jacobian
-elem.x = x;                   % input to function
-elem.jin = 0;            % input of adjoint jacobian
-elem.outref = outref;         % output reference of adjoint jacobian
-
-tape = [tape; elem];
+tape(k).tag = @(jin) c * jin; % adjoint jacobian
+tape(k).x = x;                % input to function
+tape(k).jin = 0;              % input of adjoint jacobian
+tape(k).outref = outref;      % output reference of adjoint jacobian
 
 end
 
