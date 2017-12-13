@@ -4,6 +4,8 @@ function [F, J] = FAD_Phi(U, param)
 %     Author: Fabian Meyer
 % Created on: 12 Dec 2017
 %
+% More detailed explanations: http://blog.tombowles.me.uk/2014/09/10/ad-algorithmicautomatic-differentiation/
+%
 % U: Nx1, point for Jacobian approx
 % param: parameters of function f
 % F: 1x1, value of Phi at U
@@ -14,8 +16,6 @@ x0 = param.x0;
 h  = param.T/N;
 q  = param.q;
 
-% vectors for directional derivatives
-Udots = eye(N, N);
 % values of elementary functions
 Fel = zeros(N+1,1);
 % derivatives of elementary functions
@@ -30,8 +30,9 @@ for i = 1:N
     % its derivation is 0 (constant)
     Jel(1) = 0;
 
-    % directional value
-    Udot = Udots(:,i);
+    % directional seed vector
+    Udot = zeros(N,1);
+    Udot(i) = 1;
 
     for k = 1:N
         % calculate xk = (1 + h) * xk - h * xk^2 + h * Uk

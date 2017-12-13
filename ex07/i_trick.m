@@ -5,17 +5,27 @@ function [F, J] = i_trick(f, U, param)
 % Created on: 20 Nov 2017
 %
 % f: function handle of objective
-% U: point for Jacobian approx
+% U: Nx1, point for Jacobian approx
 % param: parameters of function f
-% F: value of f at x
-% J: Jacobian approx of f at x
+% F: 1x1, value of f at x
+% J: 1xN, Jacobian approx of f at x
 
-p = U; % seed vector
+N = length(U);
 t = eps; % t at machine precision
-Uim = U + p * t * 1i; % complex input variable
+J = zeros(1,  N);
+
+for i = 1:N
+    % calc directional seed
+    p = zeros(N, 1);
+    p(i) = 1;
+    
+    % calc complex input variable
+    Uim = U + p * t * 1i;
+    J(i) = (imag(f(Uim, param)) / t) + t^2;
+    
+end
 
 F = f(U, param);
-J = (imag(f(Uim, param)) / t) + t^2;
 
 end
 

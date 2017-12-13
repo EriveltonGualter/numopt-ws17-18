@@ -23,7 +23,7 @@ Utst = rand(param.N,1);
 % forward AD
 [F3, J3] = FAD_Phi(Utst, param);
 % backward AD
-%[F4, J4] = Phi_BAD(Utst, param);
+[F4, J4] = BAD_Phi(Utst, param);
 
 % check results
 disp('Error between imaginary trick and finite differences:')
@@ -34,10 +34,7 @@ disp('Error between imaginary trick and forward AD:')
 disp(' ')
 disp(max(max(abs(J2-J3))))
 
-J1'
-J2'
-J3'
+disp('Error between imaginary trick and backward AD:')
+disp(' ')
+disp(max(max(abs(J2-J4))))
 
-%disp('Error between imaginary trick and backward AD:')
-%disp(' ')
-%disp(max(max(abs(J2-J4))))
