@@ -33,6 +33,17 @@ opts.MaxFunEvals = 5000;
 % call fmincon
 [x_opt,~,~,~,lambdas] = fmincon(obj, x0, [], [], [], [], [], [], constr, opts);
 
+J = chain_jacobian(x_opt, param);
+
+disp('Optimal value is:')
+disp(' ')
+disp(x_opt)
+
+disp('Constr jacobian rank is:')
+disp(' ')
+disp(rank(J))
+disp(size(J, 1))
+
 y_opt = x_opt(1:N);
 z_opt = x_opt(N+1:2*N);
 plot_chain(y_opt, z_opt, param);
