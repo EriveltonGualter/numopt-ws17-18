@@ -6,7 +6,7 @@ function [J] = chain_jacobian(x, param)
 %
 % x:     input vector, [y1;..;yN;z1;..;zN], 2Nx1
 % param: parameters of objective, struct
-% F:     value of objective at x, 1x1
+% J:     Jacobian of objective at x, 1x1
 
 N = param.N;
 

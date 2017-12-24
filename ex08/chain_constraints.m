@@ -9,10 +9,13 @@ function [C, Ceq] = chain_constraints(x, param)
 % C: inequality constraints, C >= 0
 % Ceq: equality constraints, Ceq == 0
 
+useThird = true;
+
 % define some abbrevs
 N = param.N;
 L = param.L;
 Li = L / (N-1);
+M = floor(N / 2);
 % split x into y and z components
 y = x(1:N);
 z = x(N+1:2*N);
@@ -21,11 +24,17 @@ z = x(N+1:2*N);
 x1 = [y(1); z(1)] - param.xi;
 % define constr 3c
 xN = [y(N); z(N)] - param.xf;
+% define constr from 2d
+xM = [y(M); z(M)] - param.xm;
 % define constr 3d
 d = (y(1:N-1) - y(2:N)).^2 + (z(1:N-1) - z(2:N)).^2 - repmat(Li^2, N-1 ,1);
 
-Ceq = [x1; xN; d];
 C = [];
+Ceq = [x1; xN; d];
+
+if useThird
+    Ceq = [Ceq; xM];
+end
 
 end
 
