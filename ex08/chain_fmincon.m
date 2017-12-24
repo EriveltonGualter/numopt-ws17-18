@@ -15,7 +15,7 @@ param.m = 0.2;      % mass of each mass point
 param.g = 9.81;     % acceleration of gravity
 param.xi = [-2; 1]; % coordinates [y1, z1] of initial point
 param.xf = [2; 1];  % coordinates [yN, zN] of final point
-param.xm = [0; 1];  % coordinates [yM, zM]
+param.xm_idx = 7;   % index of any intermediate fixed mass
 
 % initial value
 x0 = [linspace(param.xi(1), param.xf(1), N)'; ones(N,1)];

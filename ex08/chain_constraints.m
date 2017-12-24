@@ -15,7 +15,7 @@ useThird = true;
 N = param.N;
 L = param.L;
 Li = L / (N-1);
-M = floor(N / 2);
+M = param.xm_idx;
 % split x into y and z components
 y = x(1:N);
 z = x(N+1:2*N);
@@ -25,7 +25,9 @@ x1 = [y(1); z(1)] - param.xi;
 % define constr 3c
 xN = [y(N); z(N)] - param.xf;
 % define constr from 2d
-xM = [y(M); z(M)] - param.xm;
+xm = [param.xi(1) + ((param.xf(1) - param.xi(1)) / N) * (M-1);
+      1];
+xM = [y(M); z(M)] - xm;
 % define constr 3d
 d = (y(1:N-1) - y(2:N)).^2 + (z(1:N-1) - z(2:N)).^2 - repmat(Li^2, N-1 ,1);
 
