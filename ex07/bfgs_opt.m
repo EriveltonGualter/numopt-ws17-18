@@ -1,4 +1,4 @@
-function [U,X, F] = bfgs_opt(f, f_der, U0, param)
+function [Uk, Fk, X] = bfgs_opt(f, f_der, U0, param)
 
 N = param.N;
 T = param.T;
@@ -49,17 +49,13 @@ for k = 1:maxit
     % script p. 57
     s = U_new - Uk(:,k);
     y = J_new - J;
-    %B = B - (B * (s * s') * B) / (s' * B * s) + (y * y') / (s' * y);
-    if s'*y > 0
-        B = B - (s' * B * s) \ (B * (s * s') * B) + (s' * y) \ (y * y');
-    end
+    B = B - (B * (s * s') * B) / (s' * B * s) + (y * y') / (s' * y);
     
     % Update variables
     J = J_new;
     Uk(:, k+1) = U_new;
     Fk(:, k+1) = F_new;
 
-    
     if norm(J) < tol
         Fk = Fk(:, 1:k+1);
         Uk = Uk(:, 1:k+1);
@@ -68,9 +64,7 @@ for k = 1:maxit
 end
 
 U = Uk(:,end);
-F = Fk(:,end);
-
-X    = zeros(N+1,1);
+X = zeros(N+1,1);
 X(1) = x0;
 for k = 1:N
     X(k+1) = X(k) + h*( (1 - X(k))*X(k) + U(k));

@@ -16,20 +16,39 @@ param.q  = 50; % terminal weight
 % initial value
 U0 = ones(param.N, 1);
 
-% choose derivation function for Phi
+% define derication functions for phi
 BAD_der = @BAD_Phi;
 FAD_der = @FAD_Phi;
 fin_der = @(U, param) finite_difference(@Phi, U, param);
 itrick_der = @(U, param) i_trick(@Phi, U, param);
 
-[U,X,F] = bfgs_opt(@Phi, BAD_der, U0, param);
-plot_state_controls('BAD', X, U); 
+% run backwards derivation
+[Uk,Fk,X] = bfgs_opt(@Phi, BAD_der, U0, param);
+U = Uk(:,end);
+disp('BAD len:');
+disp(size(Uk,2));
+plot_state_controls('BAD', X, U);
 
-[U,X,F] = bfgs_opt(@Phi, FAD_der, U0, param);
+% run forward derivation
+[Uk,Fk,X] = bfgs_opt(@Phi, FAD_der, U0, param);
+U = Uk(:,end);
 plot_state_controls('FAD', X, U); 
 
-[U,X,F] = bfgs_opt(@Phi, fin_der, U0, param);
-plot_state_controls('Finite Differences', X, U); 
+disp('FAD len:');
+disp(size(Uk,2));
 
-[U,X,F] = bfgs_opt(@Phi, itrick_der, U0, param);
+% run finit difference
+[Uk,Fk,X] = bfgs_opt(@Phi, fin_der, U0, param);
+U = Uk(:,end);
+plot_state_controls('Finite difference', X, U); 
+
+disp('Fnite difference len:');
+disp(size(Uk,2));
+
+% run i-trick
+[Uk,Fk,X] = bfgs_opt(@Phi, itrick_der, U0, param);
+U = Uk(:,end);
 plot_state_controls('i-trick', X, U); 
+
+disp('i-trick len:');
+disp(size(Uk,2));
