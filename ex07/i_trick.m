@@ -21,7 +21,7 @@ for i = 1:N
     
     % calc complex input variable
     Uim = U + p * t * 1i;
-    J(i) = (imag(f(Uim, param)) / t) + t^2;
+    J(i) = (imag(f(Uim, param)) / t);
     
 end
 
